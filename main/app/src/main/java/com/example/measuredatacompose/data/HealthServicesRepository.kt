@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.runBlocking
 
 /**
- * Entry point for [HealthServicesClient] APIs. This also provides suspend functions around
+ * Entry point for [androidx.health.services.client.HealthServicesClient] APIs. This also provides suspend functions around
  * those APIs to enable use in coroutines.
  */
 class HealthServicesRepository(context: Context) {
