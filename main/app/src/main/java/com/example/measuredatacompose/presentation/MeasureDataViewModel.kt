@@ -152,3 +152,4 @@ sealed class UiState {
     data object NotSupported : UiState()
     data object Supported : UiState()
 }
+

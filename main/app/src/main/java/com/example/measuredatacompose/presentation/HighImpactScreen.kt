@@ -32,7 +32,7 @@ fun HighImpactScreen(
     ) {
         Text(
             text = "Vibration Exposure",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleSmall,
             color = Color.Yellow,
             textAlign = TextAlign.Center
         )
@@ -45,7 +45,7 @@ fun HighImpactScreen(
 
         Text(
             text = "Last High Impact Burst",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.secondary,
             textAlign = TextAlign.Center
         )
@@ -58,7 +58,7 @@ fun HighImpactScreen(
 
         Text(
             text = "Total High Impact Activity",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.secondary,
             textAlign = TextAlign.Center
         )

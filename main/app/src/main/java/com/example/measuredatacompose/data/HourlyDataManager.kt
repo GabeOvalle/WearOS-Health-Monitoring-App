@@ -51,7 +51,7 @@ class HourlyDataManager {
      * Returns a string representation of the hourly bpmData, showing the average BPM.
      * @return A string representation of the hourly bpmData.
      */
-     override
+    override
     fun toString(): String {
         val stringBuilder = StringBuilder()
         for ((hour, aggregate) in hourlyData) {
@@ -118,3 +118,4 @@ class HourlyDataManager {
             .hour
     }
 }
+

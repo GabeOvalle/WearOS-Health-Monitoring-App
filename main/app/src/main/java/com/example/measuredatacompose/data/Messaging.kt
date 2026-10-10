@@ -18,10 +18,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
-import java.util.concurrent.TimeUnit
 
 /**
  * Singleton utility for MQTT messaging over Wi-Fi.
@@ -29,18 +27,18 @@ import java.util.concurrent.TimeUnit
  */
 object Messaging {
     private const val TAG = "Messaging"
-    
+
     @Volatile
     private var mqttClient: Mqtt5AsyncClient? = null
     private var terminationJob: Job? = null
     private var retryJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var connectivityManager: ConnectivityManager? = null
-    
+
     @Volatile
     private var appContext: Context? = null
     private var lastBrokerAddress: String? = null
-    
+
     @Volatile
     private var isConnecting = false
 
@@ -65,7 +63,7 @@ object Messaging {
             Log.d(TAG, "Network lost, disconnecting MQTT client")
             disconnect()
         }
-        
+
         override fun onAvailable(network: Network) {
             Log.d(TAG, "Network available, triggering connection")
             appContext?.let { connect(it) }
@@ -107,13 +105,13 @@ object Messaging {
     private fun isWifiAvailable(context: Context): Boolean {
         if (isEmulator()) return true
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        
+
         // On Wear OS, 'activeNetwork' often points to the Bluetooth proxy.
         // To detect if Wi-Fi is available (e.g. for ADB or local MQTT), we inspect all networks.
         return cm.allNetworks.any { network ->
             val capabilities = cm.getNetworkCapabilities(network)
             capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true ||
-            capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) == true
+                    capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) == true
         }
     }
 
@@ -124,7 +122,7 @@ object Messaging {
             lastBrokerAddress = targetBroker
         }
 
-        // Initialize connectivity manager and callback first so we can respond to changes
+        // Initialize connectivity manager and _stepsCallback first so we can respond to changes
         if (connectivityManager == null) {
             connectivityManager = appContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val request = NetworkRequest.Builder()
@@ -140,7 +138,7 @@ object Messaging {
             }
 
             if (mqttClient?.state?.isConnected == true || isConnecting) return
-            
+
             isConnecting = true
             retryJob?.cancel()
             retryJob = null
@@ -188,7 +186,7 @@ object Messaging {
             watchId = watchId,
             timestamp = System.currentTimeMillis()
         )
-        
+
         val envelope = MqttEnvelope(
             topic = "employee",
             from = watchId,
@@ -221,7 +219,7 @@ object Messaging {
             readiness = readiness,
             timestamp = timestamp ?: System.currentTimeMillis()
         )
-        
+
         val envelope = MqttEnvelope(
             topic = "data",
             from = watchId,
@@ -301,3 +299,4 @@ object Messaging {
         }
     }
 }
+

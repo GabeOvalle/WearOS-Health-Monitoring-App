@@ -9,11 +9,10 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.Duration
 import java.time.Instant
-import java.time.LocalDate
 
 class VibrationDataManager(private val directory: File) {
     private val vibrationInfoFile = File(directory, "vibrationExposure.txt")
-    
+
     var totalDailyVibrationDuration: Duration = Duration.ZERO
         private set
 
@@ -68,3 +67,4 @@ class VibrationDataManager(private val directory: File) {
         saveVibrationData()
     }
 }
+

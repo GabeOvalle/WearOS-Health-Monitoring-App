@@ -119,7 +119,7 @@ class BpmDataManager(private val directory: File,
             if (previous != null) {
                 val duration = Duration.between(previous!!.timestamp, current.timestamp)
                 val isCurrentHigh = current.isAccurate && current.value != null && current.value!! >= healthServicesRepository.alertUpperBound*.7
-                val isPrevHigh = previous!!.isAccurate && previous!!.value != null && previous!!.value!! >= healthServicesRepository.alertLowerBound*.7
+                val isPrevHigh = previous!!.isAccurate && previous!!.value != null && previous!!.value!! >= healthServicesRepository.alertUpperBound*.7
 
                 if (isPrevHigh && isCurrentHigh && duration <= Duration.ofSeconds(5)) {
                     totalDailyHIDuration += duration
@@ -221,16 +221,16 @@ class BpmDataManager(private val directory: File,
     private fun isFileOneYearOld(file: File): Boolean {
         if (!file.exists()) return false
 
-       try {
-           val attributes = Files.readAttributes(file.toPath(), java.nio.file.attribute.BasicFileAttributes::class.java)
-           val creationInstant = Instant.ofEpochMilli(attributes.creationTime().toMillis())
-           val oneYearAgo = Instant.now().minus(365, ChronoUnit.DAYS)
+        try {
+            val attributes = Files.readAttributes(file.toPath(), java.nio.file.attribute.BasicFileAttributes::class.java)
+            val creationInstant = Instant.ofEpochMilli(attributes.creationTime().toMillis())
+            val oneYearAgo = Instant.now().minus(365, ChronoUnit.DAYS)
 
-           return creationInstant.isBefore(oneYearAgo)
-       } catch (e: Exception) {
-           Log.e(TAG, "Error checking file age", e)
-           return false
-       }
+            return creationInstant.isBefore(oneYearAgo)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking file age", e)
+            return false
+        }
     }
 
     private fun getMostRecentPreviousFile(directory: File): File? {
@@ -249,3 +249,4 @@ class BpmDataManager(private val directory: File,
             ?.second
     }
 }
+

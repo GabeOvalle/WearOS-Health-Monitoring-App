@@ -47,7 +47,7 @@ class HeartRateService : Service() {
             stopSelf()
             return START_NOT_STICKY
         }
-        
+
         startForegroundService()
         observeData()
         return START_STICKY
@@ -55,23 +55,17 @@ class HeartRateService : Service() {
 
     private fun startForegroundService() {
         val notification = createNotification()
-        
-        // Correct Hex Values for API 34+
-        // Health = 0x100 (256)
-        // Sensor = 0x200 (512)
-        val typeHealth = 0x00000100
-        val typeSensor = 0x00000200 
 
-        val serviceType = if (Build.VERSION.SDK_INT >= 34) {
-            typeHealth or typeSensor // Combined = 0x300
+        val serviceType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            typeHealth
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH
         } else {
             0
         }
 
-        Log.i("VIBRATION_DEBUG", "Service: Starting foreground with type flags: $serviceType")
-        
+        Log.i("VIBRATION_DEBUG", "Service: Starting foreground with type: $serviceType")
+
         try {
             if (serviceType != 0) {
                 startForeground(NOTIFICATION_ID, notification, serviceType)
@@ -80,6 +74,8 @@ class HeartRateService : Service() {
             }
         } catch (e: Exception) {
             Log.e("VIBRATION_DEBUG", "Service: Failed to start foreground", e)
+            // If we fail to start foreground, we must stop the service to avoid ForegroundServiceDidNotStartInTimeException
+            stopSelf()
         }
     }
 
@@ -145,3 +141,4 @@ class HeartRateService : Service() {
         const val ACTION_STOP_SERVICE = "STOP_HEART_RATE_SERVICE"
     }
 }
+
