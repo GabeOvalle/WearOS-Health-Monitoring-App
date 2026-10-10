@@ -78,19 +78,6 @@ git remote add origin https://gitlab.com/msoe.edu/sdl/y26swe2710-hasker/2-gafas-
 git branch -M main
 git push -uf origin main
 ```
-
-#### Unit Testing
- The business logic for safety alerts and heart rate analysis is verified using JUnit and MockK for vibration and flow mocking.
-​
- - **Location**: `app/src/test/java/com/example/measuredatacompose/data/HealthServicesRepositoryTest.kt`
- - **How to Run**: Right-click the `HealthServicesRepositoryTest` file in the project view and select **Run 'HealthServicesRepositoryTest'**.
- - **Coverage**: 
-    - heart rate range calculations
-    - haptic feedback triggers
-
-#### Integration Testing
-  Currently, integration testing exists for the connection to the manager portal. This test simulates the watch's heart rate sensor and validates that data is correctly serialized and published to the MQTT broker using the manager portal's schema. To run the integration tests and verify the MQTT connection to the manager portal, follow these instructions:
-
   ##### 1. Start the MQTT Broker
   Ensure you have a broker running on your host machine. Using Docker is the easiest method: ``bash docker run -it -p 1883:1883 eclipse-mosquitto``
 
