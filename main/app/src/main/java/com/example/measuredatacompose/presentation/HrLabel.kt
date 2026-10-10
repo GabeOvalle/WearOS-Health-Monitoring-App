@@ -2,7 +2,7 @@
  * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this dailyBPMData except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *     https://www.apache.org/licenses/LICENSE-2.0
@@ -42,13 +42,14 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 fun HrLabel(
     hr: Double,
     availability: DataTypeAvailability,
+    color: Color
 ) {
     val icon = when (availability) {
         DataTypeAvailability.AVAILABLE -> Icons.Default.Favorite
         DataTypeAvailability.ACQUIRING -> Icons.Default.MonitorHeart
         DataTypeAvailability.UNAVAILABLE,
         DataTypeAvailability.UNAVAILABLE_DEVICE_OFF_BODY,
-        -> Icons.Default.HeartBroken
+            -> Icons.Default.HeartBroken
         else -> Icons.Default.QuestionMark
     }
     val text = if (availability == DataTypeAvailability.AVAILABLE) {
@@ -69,6 +70,7 @@ fun HrLabel(
         Text(
             text = text,
             style = MaterialTheme.typography.displayLarge,
+            color = color,
         )
     }
 }
@@ -85,6 +87,7 @@ fun HrLabelPreview() {
         HrLabel(
             hr = 121.2,
             availability = DataTypeAvailability.AVAILABLE,
+            color = Color.Yellow
         )
     }
 }
