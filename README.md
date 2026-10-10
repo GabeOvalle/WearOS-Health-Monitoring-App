@@ -101,10 +101,10 @@ git push -uf origin main
 
 ## Known Bugs & Issues
 
--Delayed Sensor Initialization Or Not Reading: There is a ~10-second delay on startup before BPM data displays. This was orginally by design, but the code for that delay has now been removed. The current issue may be partially due to the WhileSubscribed(5000) strategy in the Repository, which only starts the sensor after the UI is fully loaded. However, there is still a delay between when the UI is loaded and the sensor starts reading. Other users have reported issues with the sensor not reading at all.
--UI Blocking on Startup: The uiState check in MeasureDataApp is a blocking check (if (uiState == UiState.Supported)). If hasHeartRateCapability() takes long to resolve, the user sees a blank screen or a "Startup" state before the Pagers are even initialized.
--Goal Tracking Limitations: While Step Goals can be configured in the UI, active step tracking and messaging-based updates for these metrics are not yet working properly.
--Input Validation: The age input field in the settings screen does not accept non-sensical values (e.g., 999), but it does not provide a warning to the user who enters those values. Further, the lower bound can be set above the upper bound for the manual range specification.
+* Delayed Sensor Initialization Or Not Reading: There is a ~10-second delay on startup before BPM data displays. This was orginally by design, but the code for that delay has now been removed. The current issue may be partially due to the WhileSubscribed(5000) strategy in the Repository, which only starts the sensor after the UI is fully loaded. However, there is still a delay between when the UI is loaded and the sensor starts reading. Other users have reported issues with the sensor not reading at all.
+* UI Blocking on Startup: The uiState check in MeasureDataApp is a blocking check (if (uiState == UiState.Supported)). If hasHeartRateCapability() takes long to resolve, the user sees a blank screen or a "Startup" state before the Pagers are even initialized.
+* Goal Tracking Limitations: While Step Goals can be configured in the UI, active step tracking and messaging-based updates for these metrics are not yet working properly.
+* Input Validation: The age input field in the settings screen does not accept non-sensical values (e.g., 999), but it does not provide a warning to the user who enters those values. Further, the lower bound can be set above the upper bound for the manual range specification.
 
 ## Authors 
 
