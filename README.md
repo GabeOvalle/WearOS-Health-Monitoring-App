@@ -1,14 +1,73 @@
 # 2-gafas-wearos-swe2710s26
 
+## Description
+This repository contains the work for team gafas in the spring 26 section of SWE 2170.
+The design involves a smartwatch-based heart rate monitoring application intended for trade workers performing physically demanding tasks. The will app continuously tracks heart rate data and presents key pieces of information, such as current BPM, hourly average BPM, daily average BPM, and high-impact activity duration. These pieces of information will be displayed in a simple, readable interface designed for use during work.
+
+### Design
+The application follows a MVC architecture, currently organized into presentation and data layers.
+**Presentation Layer (presentation package)**
+This layer is responsible for the user interface and handling user interactions.
+**Data Layer (data package)**
+This layer is responsible for abstracting the data source from the rest of the application.
+
+# Version Log - MeasureDataCompose App
+
+## v2.0.0 (Latest)
+
+### New Features
+- **Safety Alert System**: Real-time heart rate monitoring with automated alerts for anomalies (±20 BPM from average).
+- **Haptic Feedback**: Watch vibrates (500ms) when a safety alert is triggered.
+- **High-Impact Activity Alerts**: Triggers a notification if high-impact movement is detected for more than 30 seconds.
+- **Automated Permissions**: Body sensor permissions are requested automatically on app startup, removing the need for manual permission buttons.
+- **Continuous Monitoring**: App starts sensor readings automatically once permissions are granted.
+- **Grid Navigation**: 2D grid UI using nested pagers to navigate between live data, stats, and settings.
+- **Reactive UI**: High-impact duration stats update in real-time on the dashboard.
+
+### Improvements
+- Refactored `HealthServicesRepository` to use a shared hot flow for data processing and alerting.
+- Moved sensor reading logic into a background-ready flow in the Repository layer.
+- Simplified `MeasureDataScreen` UI for better focus on data and alerts.
+
+---
+
+## v1.0.0 (Base Version)
+*Original release*
+
+### Features
+- Basic heart rate monitoring using Health Services API.
+- Heart rate display with connection status icons (Acquiring/Available).
+- Persistence of heart rate data to local CSV storage.
+- Manual start/stop controls for sensor recording.
+- Basic high-impact activity tracking (saved to disk).
+
+## Installation Instructions
+
+To build and run this application on a Wear OS device, you'll need Android Studio and a connected Wear OS device (either a physical watch or an emulator).
+### Prerequisites
+* Android Studio
+* A Wear OS device or emulator
+### Using Android Studio
+This is the simplest method to get the app running
+Set Up Your Device:
+* Emulator:
+  * In Android Studio, open the Device Manager (View > Tool Windows > Device Manager).
+  * Click Create Device, select the Wear OS category, and choose a suitable hardware profile.
+  * Select a system image for Wear OS 3 or higher. Download it if prompted.
+  *  Finish the setup and launch the emulator from the Device Manager.
+* Physical Watch:
+  * Enable developer options on your watch by going to Settings > System > About and tapping the Build number seven times.
+  * Go to Settings > Developer options and enable ADB debugging. If you are connecting over Wi-Fi, also enable Wi-Fi debugging.
+  * Connect the watch to your computer. You can pair it via Wi-Fi from the Device Manager or connect it via USB
+Build and Run:
+* Ensure your watch or emulator is selected in the device dropdown menu at the top of the Android Studio window.
+* Click the Run 'app' button
+* Android Studio will automatically build the project with Gradle, install the app on your selected device, and launch it.
+
+**[https://developer.android.com/studio/run/device#connect](see for more details)**
 
 
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
+## Adding files
 
 * [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
 * [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
@@ -19,75 +78,40 @@ git remote add origin https://gitlab.com/msoe.edu/sdl/y26swe2710-hasker/2-gafas-
 git branch -M main
 git push -uf origin main
 ```
+  ##### 1. Start the MQTT Broker
+  Ensure you have a broker running on your host machine. Using Docker is the easiest method: ``bash docker run -it -p 1883:1883 eclipse-mosquitto``
 
-## Integrate with your tools
+  *Note: If authentication is required, you may need a custom `mosquitto.conf`.*
 
-* [Set up project integrations](https://gitlab.com/msoe.edu/sdl/y26swe2710-hasker/2-gafas-wearos-swe2710s26/-/settings/integrations)
+  ##### 2. Configure the IP Address
+  The test in `MessagingSimulationTest.kt` is currently set to `10.0.2.2`, which is the special alias for your host's `localhost` when using the **Android Emulator**. 
+  - **Emulator**: No changes needed.
+  - **Physical Device**: Change `brokerIp` in `MessagingSimulationTest.kt` to your computer's local network IP (e.g., `192.168.1.5`).
 
-## Collaborate with your team
+  ##### 3. Execute the Simulation
+  You can trigger the test in two ways:
 
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+  - **Android Studio**: Open `app/src/androidTest/java/com/example/measuredatacompose/MessagingSimulationTest.kt` and click the **Run** icon (green arrow) next to the `runHeartRateAlertSimulation` function.
 
-## Test and Deploy
+  ##### 4. Verify the Output
+  - **Logcat**: Filter for `Messaging` or `MessageTest` to see real-time connection status and JSON payloads.
+    
+  
 
-Use the built-in continuous integration in GitLab.
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## Known Bugs & Issues
 
-***
+- Delayed Sensor Initialization Or Not Reading: There is a ~10-second delay on startup before BPM data displays. This was orginally by design, but the code for that delay has now been removed. The current issue may be partially due to the WhileSubscribed(5000) strategy in the Repository, which only starts the sensor after the UI is fully loaded. However, there is still a delay between when the UI is loaded and the sensor starts reading. Other users have reported issues with the sensor not reading at all.
+- UI Blocking on Startup: The uiState check in MeasureDataApp is a blocking check (if (uiState == UiState.Supported)). If hasHeartRateCapability() takes long to resolve, the user sees a blank screen or a "Startup" state before the Pagers are even initialized.
+- Continuous Alert Triggering: Once a heart rate is out of range, the app triggers a new haptic vibration and UI alert for every single data point received, rather than once per "event." This results in a non-stop stream of vibrations and popups until the heart rate returns to the normal range.
 
-# Editing this README
+## Authors 
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+* Gabe Ovalle: ovalleg@msoe.edu
+* Jamie Martig: martigj@msoe.edu
+* John Eckberg: eckbergj@msoe.edu
+* Logan Collins: collinsl@msoe.edu
 
-## Suggestions for a good README
+## Credits/acknowledgements
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+The starting point for this lab is based on the [Open Source Health Services Sample](https://github.com/android/health-samples) written by the Android Orginization 
